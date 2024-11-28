@@ -1,5 +1,6 @@
 #include <random>
 #include <sycl/sycl.hpp>
+#include <omp.h>
 
 using namespace sycl;
 using namespace sycl::ext::oneapi::experimental::matrix;
@@ -30,6 +31,7 @@ template <typename KernelName> size_t get_sg_size(queue q) {
 void fill_matrix(bfloat16 *M, size_t Rows, size_t Cols) {
   std::random_device dev;
   std::uniform_real_distribution<float> fdistr(-1.0, 1.0);
+  #pragma omp parallel for
   for (unsigned int i = 0; i < Rows; i++) {
     for (unsigned int j = 0; j < Cols; j++) {
       M[i * Cols + j] = bfloat16(fdistr(dev));

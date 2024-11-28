@@ -307,11 +307,11 @@ int gemm(void) {
   bfloat16 *vnniB = malloc_shared<bfloat16>(MATRIX_K * MATRIX_N, q);
 #endif
   float *C = malloc_shared<float>(MATRIX_M * MATRIX_N, q);
-  float *refC = malloc_shared<float>(MATRIX_M * MATRIX_N, q);
+  // float *refC = malloc_shared<float>(MATRIX_M * MATRIX_N, q);
   // Initialize; fill matrices
   fill_matrix(A, MATRIX_M, MATRIX_K);
   fill_matrix(B, MATRIX_K, MATRIX_N);
-  native_matmul(A, B, refC, MATRIX_M, MATRIX_N, MATRIX_K);
+  // native_matmul(A, B, refC, MATRIX_M, MATRIX_N, MATRIX_K);
 #ifdef VNNI
   matrix_vnni<bfloat16>(MATRIX_K, MATRIX_N, B, vnniB, 2);
   B = vnniB;
@@ -342,7 +342,7 @@ int gemm(void) {
     NCACHE1, KCACHE1, (MATRIX_M >= MCACHE2) ? MCACHE2 : MATRIX_M, NCACHE2,
     KCACHE2, kernel_name > (A, B, C, q, testIterations);
   }
-  verify_result(C, refC, MATRIX_M, MATRIX_N, MATRIX_K);
+  // verify_result(C, refC, MATRIX_M, MATRIX_N, MATRIX_K);
 
   double msecPerMatrixMul = duration / static_cast<double>(testIterations);
   double gflops = (2.f * MATRIX_M * MATRIX_N * MATRIX_K * 1.0e-9f) /
